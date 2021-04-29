@@ -16,7 +16,7 @@ class AlbumsController < ApplicationController
   def tracks
     if Album.find_by(id: params[:album_id])
       @tracks = Track.where(album_id: params[:album_id])
-      render json: @tracks
+      render json: @tracks, only: [:id, :album_id, :name, :duration, :times_played, :artist, :album, :self]
     else
       render status: :unprocessable_entity
       return

@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :albums do
     post "/tracks", to: "tracks#create"
     get "/tracks", to: "albums#tracks"
-    put "/play", to: "albums#tracks"
+    put "/play", to: "albums#play"
   end
   resources :artists do
     post "/albums", to: "albums#create"

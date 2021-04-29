@@ -43,7 +43,7 @@ class TracksController < ApplicationController
     end
 
     id_params[:artist] = request.protocol + request.host_with_port + "/artists" + "/#{id_params[:artist_id]}"
-    id_params[:album] = request.protocol + request.host_with_port + "/album" + "/#{id_params[:album_id]}"
+    id_params[:album] = request.protocol + request.host_with_port + "/albums" + "/#{id_params[:album_id]}"
     id_params[:self] = request.protocol + request.host_with_port + "/tracks" + "/#{id_params[:id]}"
 
     @track = Track.new(id_params)
