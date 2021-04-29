@@ -15,7 +15,12 @@ class TracksController < ApplicationController
 
   # POST /tracks
   def create
-    
+
+    if !track_params[:name] || !track_params[:duration]
+      render status: :bad_request
+      return
+    end
+
     id_params = {:id => Base64.encode64(track_params[:name]+":"+params[:album_id]).delete!("\n")}
     id_params[:name] = track_params[:name]
     id_params[:duration] = track_params[:duration]
@@ -26,6 +31,11 @@ class TracksController < ApplicationController
     if @album
       id_params[:artist_id] = @album.artist_id
     end
+
+    id_params[:artist] = request.protocol + request.host_with_port + "/artists" + "/#{id_params[:artist_id]}"
+    id_params[:album] = request.protocol + request.host_with_port + "/album" + "/#{id_params[:album_id]}"
+    id_params[:self] = request.protocol + request.host_with_port + "/tracks" + "/#{id_params[:id]}"
+
     @track = Track.new(id_params)
     
     @existed_track = Track.find_by(id: id_params[:id])
@@ -67,6 +77,6 @@ class TracksController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def track_params
-      params.require(:track).permit(:id, :name, :duration, :times_played, :artist_id, :album_id, :artist, :album, :self)
+      params.require(:track).permit(:name, :duration)
     end
 end

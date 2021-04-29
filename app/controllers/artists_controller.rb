@@ -38,9 +38,16 @@ class ArtistsController < ApplicationController
 
   # POST /artists
   def create
+    if !artist_params[:name] || !artist_params[:age]
+      render status: :bad_request
+      return
+    end 
     id_params = {:id => Base64.encode64(artist_params[:name]).delete!("\n")}
     id_params[:name] = artist_params[:name]
     id_params[:age] = artist_params[:age]
+    id_params[:albums] = request.protocol + request.host_with_port + "/artists" + "/#{id_params[:id]}/albums"
+    id_params[:tracks] = request.protocol + request.host_with_port + "/artists" + "/#{id_params[:id]}/tracks"
+    id_params[:self] = request.protocol + request.host_with_port + "/artists" + "/#{id_params[:id]}"
     @artist = Artist.new(id_params)
     @existed_artist = Artist.find_by(id: id_params[:id])
     
@@ -76,6 +83,6 @@ class ArtistsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def artist_params
-      params.require(:artist).permit(:id, :name, :age, :albums, :tracks, :self)
+      params.require(:artist).permit(:name, :age)
     end
 end
