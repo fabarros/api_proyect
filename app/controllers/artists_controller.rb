@@ -36,6 +36,18 @@ class ArtistsController < ApplicationController
     end
   end
 
+  def play
+    if Artist.find_by(id: params[:artist_id])
+      @tracks = Track.where(artist_id: params[:artist_id])
+      @tracks.each do |track|
+        track.update(times_played: track.times_played + 1)
+      end
+      render status: :ok
+    else
+      render status: :not_found
+    end
+  end
+
   # POST /artists
   def create
     if !artist_params[:name] || !artist_params[:age]

@@ -23,6 +23,18 @@ class AlbumsController < ApplicationController
     end
   end
 
+  def play
+    if Album.find_by(id: params[:album_id])
+      @tracks = Track.where(album_id: params[:album_id])
+      @tracks.each do |track|
+        track.update(times_played: track.times_played + 1)
+      end
+      render status: :ok
+    else
+      render status: :not_found
+    end
+  end
+
   # POST /albums
   def create
 

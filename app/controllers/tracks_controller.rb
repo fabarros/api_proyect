@@ -13,6 +13,16 @@ class TracksController < ApplicationController
     render json: @track, only: [:id, :album_id, :name, :duration, :times_played, :artist, :album, :self]
   end
 
+  def play
+    @track = Track.find_by(id: params[:track_id])
+    if @track
+      @track.update(times_played: @track.times_played + 1)
+      render status: :ok
+    else
+      render status: :not_found
+    end
+  end
+
   # POST /tracks
   def create
 
